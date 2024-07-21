@@ -24,7 +24,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'api.services.authentication_backend.AuthenticationUserBackend',
+    'api.services.authentication_service.AuthenticationUser',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

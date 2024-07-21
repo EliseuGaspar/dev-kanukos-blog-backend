@@ -5,7 +5,7 @@ from api.models.tertiary.saved_model import Saved
 from api.serializers.user_serializers import UserSerializer
 from api.serializers.favorites_serializers import FavoriteSerializerToUserRetrieve
 from api.serializers.saved_serializers import SavedSerializerToUserRetrieve
-from api.services.hashPasswordFeature import HashPassword
+from api.services.hashPassword_service import HashPassword
 from api.services.jwt_middleware import JwtMiddleware
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response

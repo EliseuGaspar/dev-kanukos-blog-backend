@@ -10,6 +10,7 @@ class AdminSerializer(ModelSerializer):
         fields = ['id', 'name', 'email', 'password', 'is_super', 'is_content', 'is_pub']
 
 
+# Serializador para as consultas com chave estrangeira
 class AdminSerializerToFKQ(ModelSerializer):
 
     class Meta:

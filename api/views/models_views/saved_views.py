@@ -1,11 +1,11 @@
-from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from api.models.tertiary.saved_model import Saved
-from api.serializers.saved_serializers import SavedSerializer
-from api.services.jwt_middleware import JwtMiddleware
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from api.models.tertiary.saved_model import Saved
+from api.services.jwt_middleware import JwtMiddleware
+from api.serializers.saved_serializers import SavedSerializer
 
 
 authorization_token = openapi.Parameter(
@@ -58,7 +58,7 @@ class SavedView(ViewSet):
 
     @JwtMiddleware.tokenRequired
     @swagger_auto_schema(
-        operation_description="Partially update a Model instance",
+        operation_description="Partially update a Saved Model instance",
         request_body = SavedSerializer,
         responses={200: SavedSerializer}
     )

@@ -1,9 +1,9 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import ModelViewSet
+from api.services.jwt_middleware import JwtMiddleware
 from api.models.secondary.comments_model import Comments
 from api.serializers.comments_serializers import CommentsSerializer
-from api.services.jwt_middleware import JwtMiddleware
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 
 authorization_token = openapi.Parameter(

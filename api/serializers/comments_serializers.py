@@ -9,7 +9,7 @@ class CommentsSerializer(ModelSerializer):
         model = Comments
         fields = '__all__'
 
-
+# Serializador para consultas por chaves estrangeiras
 class CommentsSerializerToFKQ(ModelSerializer):
 
     user = UserSerializerToFKQ(read_only=True)

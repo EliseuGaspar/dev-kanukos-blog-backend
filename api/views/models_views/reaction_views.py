@@ -1,11 +1,13 @@
-from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from api.models.secondary.reactions_model import Reaction
-from api.serializers.reactions_serializers import ReactionSerializer, ReactionSerializerToCreate
-from api.services.jwt_middleware import JwtMiddleware
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from api.serializers.reactions_serializers import (
+    ReactionSerializer, ReactionSerializerToCreate)
+from api.services.jwt_middleware import JwtMiddleware
+from api.models.secondary.reactions_model import Reaction
+
 
 
 authorization_token = openapi.Parameter(
@@ -38,7 +40,7 @@ class ReactionsView(ViewSet):
         manual_parameters=[authorization_token,]
     )
     def create(self, request, *args, **kwargs):
-        new_request = self.changeRequestDatas(request, kwargs.get('current_user'))
+        new_request = self.setUserIdOnRequest(request, kwargs.get('current_user'))
         serializer = ReactionSerializer(data = new_request.data)
         if serializer.is_valid():
             serializer.save()
@@ -47,20 +49,20 @@ class ReactionsView(ViewSet):
 
     @JwtMiddleware.tokenRequired
     @swagger_auto_schema(
-        operation_description="Partially update a MyModel instance",
+        operation_description="Partially update a React Model instance",
         request_body = ReactionSerializer,
         responses={200: ReactionSerializer}
     )
     def partial_update(self, request, pk=None):
         queryset = self.get_queryset()
-        mymodel = get_object_or_404(queryset, pk=pk)
-        serializer = ReactionSerializer(mymodel, data=request.data, partial=True)
+        model = get_object_or_404(queryset, pk=pk)
+        serializer = ReactionSerializer(model, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status = 200)
         return Response(serializer.errors, status=400)
 
-    def changeRequestDatas(self, request: any, id: dict):
+    def setUserIdOnRequest(self, request: any, id: dict):
         request.data['user'] = id.get('id')
         return request
 

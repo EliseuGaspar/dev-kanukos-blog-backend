@@ -12,6 +12,7 @@ class FavoriteSerializer(ModelSerializer):
         fields = '__all__'
 
 
+# Serializador para a rota de criação de favoritos
 class FavoriteSerializerToCreate(ModelSerializer):
     user = IntegerField(required = False)
 
@@ -20,6 +21,7 @@ class FavoriteSerializerToCreate(ModelSerializer):
         fields = ['post', 'user']
 
 
+# Serializador para a busca de favoritos por usuários
 class FavoriteSerializerToUserRetrieve(ModelSerializer):
     post = PostsSerializerForFavoriteAndSaved(read_only = True)
 

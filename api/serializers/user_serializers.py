@@ -7,18 +7,18 @@ from api.models.primaries.user_model import User
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'password', 'is_active']
+        fields = ['id', 'name', 'email', 'password', 'is_active',]
 
-
+# Serializador para as consultas de chaves estrangeiras
 class UserSerializerToFKQ(ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'name']
+        fields = ['id', 'name',]
 
-
+# Serializador para as consultas Retrieve de usuários
 class UserSerializerToRetrieve(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'user', 'email', 'favorites', 'saved']
+        fields = ['id', 'user', 'email',]

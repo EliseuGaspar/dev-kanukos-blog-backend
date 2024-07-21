@@ -8,7 +8,7 @@ from rest_framework.response import Response
 class JwtMiddleware():
 
     @classmethod
-    def generateToken(self, id: int, email: str, permission: str, access: str = None) -> str:
+    def generateToken(cls, id: int, email: str, permission: str, access: str = None) -> str:
         payload = {
             'id': id,
             'email': email,
@@ -18,6 +18,43 @@ class JwtMiddleware():
         }
         token = jwt.encode(payload, key = SECRET_KEY, algorithm = 'HS256')
         return token
+
+    @classmethod
+    def verifyToken(cls, token: str) -> bool:
+        if not token:
+            return Response({
+                'response': None,
+                'msg': 'Token Unsent'
+            }, status = status.HTTP_511_NETWORK_AUTHENTICATION_REQUIRED)
+
+        try:
+            data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+
+            if data.get('permission') != 'admin':
+                return Response({
+                    'response': None,
+                    'msg': 'Access denied. This is an admin route!'
+                }, status = status.HTTP_401_UNAUTHORIZED)
+
+            return True
+
+        except jwt.exceptions.ExpiredSignatureError:
+            return Response({
+                'response': None,
+                'msg': 'Session expired! Log back in.'
+            }, status = status.HTTP_511_NETWORK_AUTHENTICATION_REQUIRED)
+
+        except jwt.exceptions.DecodeError:
+            return Response({
+                'response': None,
+                'msg': 'Invalid token!'
+            }, status = status.HTTP_401_UNAUTHORIZED)
+
+        except Exception as e:
+            return Response({
+                'response': None,
+                'msg': 'internal server error.',
+            }, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
     def tokenRequired(f):
@@ -120,5 +157,6 @@ class JwtMiddleware():
             kwargs['currentUser'] = currentUser
             return f(view_instance, request, *args, **kwargs)
         return decorated
+
 
 

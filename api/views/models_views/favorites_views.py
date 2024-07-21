@@ -1,11 +1,12 @@
-from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from api.models.tertiary.favorites_model import Favorite
-from api.serializers.favorites_serializers import FavoriteSerializer, FavoriteSerializerToCreate
-from api.services.jwt_middleware import JwtMiddleware
+from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from api.serializers.favorites_serializers import (
+    FavoriteSerializer, FavoriteSerializerToCreate)
+from api.services.jwt_middleware import JwtMiddleware
+from api.models.tertiary.favorites_model import Favorite
 
 
 authorization_token = openapi.Parameter(
@@ -15,9 +16,6 @@ authorization_token = openapi.Parameter(
 
 
 class FavoriteView(ViewSet):
-
-    def get_queryset(self):
-        return Favorite.objects.all()
 
     @JwtMiddleware.adminAccessOnly
     @swagger_auto_schema(
@@ -38,7 +36,7 @@ class FavoriteView(ViewSet):
         manual_parameters=[authorization_token,]
     )
     def create(self, request, *args, **kwargs):
-        new_request = self.changeRequestDatas(request, kwargs.get('current_user'))
+        new_request = self.change_id_into_request(request, kwargs.get('current_user'))
         serializer = FavoriteSerializer(data = new_request.data)
         if serializer.is_valid():
             serializer.save()
@@ -57,7 +55,10 @@ class FavoriteView(ViewSet):
         model.delete()
         return Response(status=204)
 
-    def changeRequestDatas(self, request: any, id: dict):
+    def change_id_into_request(self, request: any, id: dict):
         request.data['user'] = id.get('id')
         return request
+
+    def get_queryset(self):
+        return Favorite.objects.all()
 
