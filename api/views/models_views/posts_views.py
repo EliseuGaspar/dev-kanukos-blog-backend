@@ -40,10 +40,13 @@ class PostsViewCrud(ModelViewSet):
                 return Response({
                     'Access denied, route to maximum admin and content admin!'
                 }, status = HTTP_401_UNAUTHORIZED)
+            else:
+                return
         if access != 'super' and access != 'publish':
             return Response({
                 'Access denied, route to maximum admin and publish admin!'
             }, status = HTTP_401_UNAUTHORIZED)
+        return
 
     @JwtMiddleware.adminAccessOnly
     @swagger_auto_schema(manual_parameters=[authorization_token,])
